@@ -6,11 +6,23 @@ import { createClient } from '@supabase/supabase-js'
 // Protección: este archivo debe usarse solo en servidor; si se importa desde
 // un Client Component, Next.js bundlearía la service_role key.
 
-if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
+// Next.js solo inyecta en el navegador variables con prefijo NEXT_PUBLIC_, así que la
+// clave administrativa nunca llega al bundle del cliente; este guard además hace que
+// un import accidental desde el navegador falle de forma ruidosa en vez de silenciosa.
+if (typeof window !== 'undefined') {
+  throw new Error('lib/supabase.ts es solo de servidor: usa lib/supabase-client.ts en el navegador')
+}
+
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL
+// Clave administrativa: formato nuevo `sb_secret_…` (preferido) o JWT `service_role` (legado).
+// Se acepta cualquiera de las dos para poder migrar sin tiempo de inactividad.
+const SUPABASE_ADMIN_KEY = process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY
+
+if (!SUPABASE_URL) {
   throw new Error('Falta NEXT_PUBLIC_SUPABASE_URL')
 }
-if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
-  throw new Error('Falta SUPABASE_SERVICE_ROLE_KEY')
+if (!SUPABASE_ADMIN_KEY) {
+  throw new Error('Falta SUPABASE_SECRET_KEY (o SUPABASE_SERVICE_ROLE_KEY, formato legado)')
 }
 
 const TIMEOUT_MS = 30_000
@@ -35,8 +47,8 @@ async function fetchConTimeout(
 }
 
 export const supabaseAdminRaw = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY,
+  SUPABASE_URL,
+  SUPABASE_ADMIN_KEY,
   {
     auth: { autoRefreshToken: false, persistSession: false },
     global: { fetch: fetchConTimeout },

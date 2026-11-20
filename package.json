@@ -8,6 +8,7 @@
     "build": "node scripts/build-local.mjs",
     "build:local": "node scripts/build-local.mjs",
     "test:flows": "node tests/conversation-flows.test.mjs",
+    "test:security": "node --test \"tests/security/**/*.test.mjs\"",
     "test:wire": "tsx --env-file=.env.test tests/event-wire-flow.test.mts",
     "test:horario": "tsx --env-file=.env.test tests/horario.test.mts",
     "test:nombre": "tsx --env-file=.env.test tests/nombre.test.mts",

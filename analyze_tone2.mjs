@@ -1,9 +1,8 @@
-import { createClient } from '@supabase/supabase-js'
+import { createScriptClient } from './scripts/lib/supabase-script-env.mjs'
 
-const supa = createClient(
-  'https://wfeqmdzmozthfwsqjhwo.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndmZXFtZHptb3p0aGZ3c3FqaHdvIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3OTk5MjY1OSwiZXhwIjoyMDk1NTY4NjU5fQ.EY9OcKBuN95o7BjTIX38DfTzS0sUYjsn-tTWz49iju8'
-)
+// Script local de diagnóstico (solo lectura). Acceso: admin → clave secreta (lee tablas con datos personales; omite RLS).
+// Uso: node --env-file=.env.local analyze_tone2.mjs
+const supa = createScriptClient('admin')
 
 async function main() {
   const { data: all } = await supa.from('historial_chat').select('*').order('creado_en', {ascending: true}).limit(500)

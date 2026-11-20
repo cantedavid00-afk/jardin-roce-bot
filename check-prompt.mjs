@@ -1,9 +1,8 @@
-import { createClient } from '@supabase/supabase-js'
+import { createScriptClient } from './scripts/lib/supabase-script-env.mjs'
 
-const supa = createClient(
-  'https://wfeqmdzmozthfwsqjhwo.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndmZXFtZHptb3p0aGZ3c3FqaHdvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk5OTI2NTksImV4cCI6MjA5NTU2ODY1OX0.4QnYmhIOpbvBlYbWyT_Fhwf0sdeJLVfVDd_gNbrv3xU'
-)
+// Script local de diagnóstico (solo lectura). Acceso: public → clave publicable (respeta RLS).
+// Uso: node --env-file=.env.local check-prompt.mjs
+const supa = createScriptClient('public')
 
 // Get the current system prompt
 ;(async () => {
