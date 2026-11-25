@@ -1,0 +1,30 @@
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Next.js type definitions
+        run: printf '/// <reference types="next" />\n/// <reference types="next/image-types/global" />\n' > next-env.d.ts
+      - name: Type check
+        run: npx tsc --noEmit
+      - name: Security tests
+        run: npm run test:security
+      # Las suites de dominio leen .env.test; en CI se usan valores ficticios (no hay red).
+      - name: Domain test suites
+        run: |
+          printf 'NEXT_PUBLIC_SUPABASE_URL=https://example.supabase.co\nNEXT_PUBLIC_SUPABASE_ANON_KEY=ci-dummy\nSUPABASE_SERVICE_ROLE_KEY=ci-dummy\n' > .env.test
+          for t in flows horario nombre validator inventario reclamaciones telefono precio template novedades poda admin-commands; do
+            echo "::group::test:$t"; npm run -s test:$t; echo "::endgroup::"
+          done

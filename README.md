@@ -1,5 +1,6 @@
 # Flora — WhatsApp Sales Assistant for Jardín RoCé
 
+[![tests](https://github.com/cantedavid00-afk/jardin-roce-bot/actions/workflows/test.yml/badge.svg)](https://github.com/cantedavid00-afk/jardin-roce-bot/actions/workflows/test.yml)
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white)
 ![Node.js 22](https://img.shields.io/badge/Node.js_22-5FA04E?style=flat-square&logo=nodedotjs&logoColor=white)
 ![Next.js 16](https://img.shields.io/badge/Next.js_16-000000?style=flat-square&logo=nextdotjs&logoColor=white)
